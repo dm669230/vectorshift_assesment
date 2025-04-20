@@ -18,6 +18,8 @@ class IntegrationItem:
         delta: Optional[str] = None,
         drive_id: Optional[str] = None,
         visibility: Optional[bool] = True,
+        object_id: Optional[str] = None,
+        data: Optional[dict] = None,
     ):
         self.id = id
         self.type = type
@@ -33,3 +35,5 @@ class IntegrationItem:
         self.delta = delta
         self.drive_id = drive_id
         self.visibility = visibility
+        self.object_id = object_id
+        self.data = data

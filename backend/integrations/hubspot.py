@@ -14,6 +14,7 @@ APP_ID = '11170790'
 CLIENT_ID = 'b73a4f9a-0a2e-4de6-a118-5934c0362139'
 CLIENT_SECRET = 'e51fcdb3-2678-484b-9b25-8e6abe1dae69'
 
+TOKEN_URL = 'https://api.hubapi.com/oauth/v1/token'
 REDIRECT_URI = 'http://localhost:8000/integrations/hubspot/oauth2callback'
 
 scopes = [
@@ -21,7 +22,8 @@ scopes = [
     'crm.objects.contacts.write',
     'crm.schemas.contacts.read',
     'oauth',
-    'account-info.security.read'
+    'account-info.security.read',
+    'files'
 ]
 
 authorization_base_url = 'https://app-na2.hubspot.com/oauth/authorize'
@@ -90,7 +92,7 @@ async def oauth2callback_hubspot(request: Request):
 
     async with httpx.AsyncClient() as client:
         token_response = await client.post(
-            'https://api.hubapi.com/oauth/v1/token',
+            TOKEN_URL,
             data={
                 'grant_type': 'authorization_code',
                 'client_id': CLIENT_ID,
@@ -154,7 +156,8 @@ async def fetch_items(access_token: str, url: str, aggregated_response: list, cl
         response.raise_for_status()
         
         data = response.json()
-        results = data.get('bases', [])
+        print("data :", data)
+        results = data.get('results', [])
         aggregated_response.extend(results)
         
         new_offset = data.get('offset')
@@ -166,14 +169,12 @@ async def fetch_items(access_token: str, url: str, aggregated_response: list, cl
 
 
 def create_integration_item_metadata_object(
-    response_json: dict, item_type: str, parent_id=None, parent_name=None
+    response_json: dict, item_type: str
 ) -> IntegrationItem:
     return IntegrationItem(
-        id=f"{response_json.get('id')}_{item_type}",
-        name=response_json.get('name'),
+        id=f"{response_json.get('id')}",
         type=item_type,
-        parent_id=f"{parent_id}_Base" if parent_id else None,
-        parent_path_or_name=parent_name,
+        data=response_json.get('properties')
     )
 
 
@@ -192,11 +193,14 @@ async def get_items_hubspot(credentials):
         try:
             await fetch_items(
                 credentials.get('access_token'),
-                'https://api.hubapi.com/crm/v3/objects/contacts',   # ✅ Change URL here
+                'https://api.hubapi.com/crm/v3/objects/contacts',
+                # 'https://api.hubapi.com/files/v3/files/search', 
+                # 'https://api.hubapi.com/files',
+                # 'https://api.hubapi.com/crm/v3/objects/documents',
                 list_of_responses,
                 client
             )
-            
+            print("list_of_responses:", list_of_responses)
             for response in list_of_responses:
                 list_of_integration_item_metadata.append(
                     create_integration_item_metadata_object(response, 'Contact')  # ✅ Type: Contact
