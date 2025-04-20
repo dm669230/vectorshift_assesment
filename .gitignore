@@ -1,0 +1,69 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+*.pot
+*.pyc
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.mypy_cache/
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+instance/
+.scrapy/
+.dmypy.json
+.pyre/
+.pytype/
+
+# Django/Flask/Migrations (if any)
+*.sqlite3
+db.sqlite3
+*.db
+*.pdb
+*.pid
+*.seed
+*.backup
+local_settings.py
+.env
+
+# React / Node
+node_modules/
+build/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# IDE/editor specific
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Others
+*.bak
+*.swp
+*.orig
+*.tmp
+
+# If using Docker
+*.env.docker
+docker-compose.override.yml
+
+# Coverage reports
+coverage.xml

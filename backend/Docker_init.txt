@@ -1,0 +1,5 @@
+#build docker image name my-fastapi-app
+docker build -t my-fastapi-app .
+
+# Run the container on port 8000
+docker run -p 8000:8000 my-fastapi-app

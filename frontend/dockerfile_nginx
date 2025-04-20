@@ -1,0 +1,23 @@
+# select the suitable and lite base image
+FROM node:18-alpine AS build
+
+WORKDIR /app
+COPY package.json package-lock.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+#serve the app with simple webserver
+FROM nginx:stable-alpine
+
+#copy build react app to nginx public folder
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
