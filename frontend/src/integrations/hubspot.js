@@ -41,7 +41,7 @@ export const HubspotIntegration = ({ user, org, integrationParams, setIntegratio
     // Function to handle logic when the OAuth window closes
     const handleWindowClosed = async () => {
         try {
-            // Step 1: First, fetch credentials using user_id and org_id
+            // fetch credentials using user_id and org_id
             const formDataCreds = new FormData();
             formDataCreds.append('user_id', user);
             formDataCreds.append('org_id', org);
@@ -50,24 +50,12 @@ export const HubspotIntegration = ({ user, org, integrationParams, setIntegratio
             const credentials = credentialsResponse.data; 
     
             if (credentials) {
-                // ✅ FIRST update integrationParams with type
+                // Set the credentials in the integrationParams
                 setIntegrationParams(prev => ({ 
                     ...prev, 
                     credentials: credentials, 
-                    type: 'hubspot'  // Explicit type set before any other operations
+                    type: 'Hubspot'  
                 }));
-    
-                // THEN make the items request
-                const formDataItems = new FormData();
-                formDataItems.append('credentials', JSON.stringify(credentials));
-                
-                const itemsResponse = await axios.post(
-                    `http://localhost:8000/integrations/hubspot/load`,
-                    formDataItems
-                );
-                console.log('form_data_response', formDataItems)
-                console.log('Fetched Hubspot Items:', itemsResponse.data);
-                setIsConnected(true);
             }
             setIsConnecting(false);
         } catch (e) {

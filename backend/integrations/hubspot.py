@@ -170,7 +170,7 @@ async def fetch_items(access_token: str, url: str, aggregated_response: list, cl
 
 def create_integration_item_metadata_object(
     response_json: dict, item_type: str
-) -> IntegrationItem:
+):
     return IntegrationItem(
         id=f"{response_json.get('id')}",
         type=item_type,

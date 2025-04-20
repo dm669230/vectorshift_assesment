@@ -13,17 +13,17 @@ const endpointMapping = {
 };
 
 export const DataForm = ({ integrationType, credentials }) => {
-    const [loadedData, setLoadedData] = useState(null);
+    const [loadedData, setLoadedData] = useState("");
     const endpoint = endpointMapping[integrationType];
     console.log('endpoint', endpoint);
-    
+
     const handleLoad = async () => {
         try {
             const formData = new FormData();
             formData.append('credentials', JSON.stringify(credentials));
             const response = await axios.post(`http://localhost:8000/integrations/${endpoint}/load`, formData);
             const data = response.data;
-            setLoadedData(data);
+            setLoadedData(JSON.stringify(data)); // to display the loaded data
         } catch (e) {
             alert(e?.response?.data?.detail);
         }
@@ -34,7 +34,7 @@ export const DataForm = ({ integrationType, credentials }) => {
             <Box display='flex' flexDirection='column' width='100%'>
                 <TextField
                     label="Loaded Data"
-                    value={loadedData || ''}
+                    value={loadedData}
                     sx={{mt: 2}}
                     InputLabelProps={{ shrink: true }}
                     disabled
